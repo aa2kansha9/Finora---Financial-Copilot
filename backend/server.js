@@ -10,7 +10,6 @@ const portfolioRoutes = require("./routes/portfolioRoutes");
 const goalRoutes = require("./routes/goalRoutes");
 const reportRoutes = require("./routes/reportRoutes");
 const simulatorRoutes = require("./routes/simulatorRoutes");
-const contactRoutes   = require("./routes/contactRoutes");
 const { generateAIAdvice } = require("./services/aiService");
 const { getStructuredInsights } = require("./services/aiService");
 const protect = require("./middleware/authMiddleware");
@@ -51,7 +50,7 @@ app.use("/api/portfolio", portfolioRoutes);
 app.use("/api/goals", goalRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/simulator", simulatorRoutes);
-app.use("/api/contact",   contactRoutes);
+
 
 app.post("/api/ai/behavior", async (req, res) => {
   try {

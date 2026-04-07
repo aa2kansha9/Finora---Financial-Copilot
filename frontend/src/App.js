@@ -14,7 +14,7 @@ import FinanceEntry from "./components/FinanceEntry/FinanceEntry";
 import PersonalityPage from "./components/FinancialHealth/personality.jsx";
 import AboutPage   from "./pages/About.jsx";
 import HelpPage    from "./pages/Help.jsx";
-import ContactPage from "./pages/Contact.jsx";
+
 
 const PrivateRoute = ({ children }) => {
   const { token } = useAuth();
@@ -39,7 +39,6 @@ export default function App() {
         <Route path="/dashboard/personality"  element={<PrivateRoute><PersonalityPage /></PrivateRoute>} />
         <Route path="/dashboard/about"        element={<PrivateRoute><AboutPage /></PrivateRoute>} />
         <Route path="/dashboard/help"         element={<PrivateRoute><HelpPage /></PrivateRoute>} />
-        <Route path="/dashboard/contact"      element={<PrivateRoute><ContactPage /></PrivateRoute>} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>

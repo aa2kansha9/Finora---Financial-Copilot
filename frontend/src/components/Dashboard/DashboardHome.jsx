@@ -288,7 +288,6 @@ export default function DashboardHome() {
           <PersonalityNavBtn onClick={() => navigate("/dashboard/personality")} />
           <button style={s.navBtn} onClick={() => navigate("/dashboard/about")}>About</button>
           <button style={s.navBtn} onClick={() => navigate("/dashboard/help")}>Help</button>
-          <button style={s.navBtn} onClick={() => navigate("/dashboard/contact")}>Contact</button>
           <button style={s.logoutBtn} onClick={() => { logout(); navigate("/login"); }}>Sign out</button>
         </div>
       </div>

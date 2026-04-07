@@ -97,8 +97,42 @@ export default function HelpPage() {
           </Card>
         </Section>
 
+      
+
       </div>
+      <div
+  style={{
+    marginTop: "2rem",
+    padding: "1rem 1.5rem",
+    background: "#F7F4D5",   // beige background
+    color: "#0A3323",         // dark green text
+    fontSize: "1rem",
+    textAlign: "center",
+    borderRadius: "12px",
+    maxWidth: "500px",
+    marginLeft: "auto",
+    marginRight: "auto",
+    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "0.5rem",
+  }}
+>
+  
+  <span>
+    For any further queries, contact{" "}
+    <a
+      href="mailto:aakansha.aparab@gmail.com"
+      style={{ color: "#839958", textDecoration: "underline", fontWeight: "600", padding: "0.2rem", borderRadius: "6px"}}
+    >
+      aakansha.aparab@gmail.com
+    </a>
+  </span>
+</div>
+
     </div>
+   
   );
 }
 
