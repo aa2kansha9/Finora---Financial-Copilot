@@ -11,14 +11,12 @@ export default function ContactPage() {
   const [backHovered, setBackHovered] = useState(false);
   const [btnHovered, setBtnHovered]   = useState(false);
 
-  const handleChange = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
-
   const handleSubmit = async e => {
   e.preventDefault();
   setStatus("sending");
   
   try {
-    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/contact`, {
+    const res = await fetch("https://finance-backend-ycl6.onrender.com/api/contact", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
@@ -30,8 +28,9 @@ export default function ContactPage() {
     
     setStatus("success");
     setForm({ name: "", email: "", message: "" });
-    setErrMsg(""); // Clear any previous error messages
+    setErrMsg("");
   } catch (err) {
+    console.error("Error:", err);
     setErrMsg(err.message);
     setStatus("error");
   }
