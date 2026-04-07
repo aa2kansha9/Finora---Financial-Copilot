@@ -1,26 +1,32 @@
 const express = require("express");
-const router  = express.Router();
+const router = express.Router();
 const nodemailer = require("nodemailer");
 
+// POST /api/contact
 router.post("/", async (req, res) => {
-  const { name, email, message } = req.body;
+  // req.body fix: now this will work if express.json() is used in server.js
+  const { name, email, message } = req.body || {};
+
   if (!name || !email || !message)
     return res.status(400).json({ message: "All fields are required." });
 
   try {
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com", // Gmail SMTP
+      port: 587,              // STARTTLS port (works on Render)
+      secure: false,          // use STARTTLS
       auth: {
         user: process.env.CONTACT_EMAIL_USER,
         pass: process.env.CONTACT_EMAIL_PASS,
       },
     });
 
+    // verify connection
     await transporter.verify();
 
     await transporter.sendMail({
       from: `"Finora Contact" <${process.env.CONTACT_EMAIL_USER}>`,
-      to:   "aakansha.aparab@gmail.com",
+      to: "aakansha.aparab@gmail.com",
       replyTo: email,
       subject: `Finora — Message from ${name}`,
       html: `
@@ -37,7 +43,7 @@ router.post("/", async (req, res) => {
 
     res.json({ success: true });
   } catch (err) {
-    console.error("Contact email error:", err.message);
+    console.error("Contact email error:", err);
     res.status(500).json({ message: err.message });
   }
 });
