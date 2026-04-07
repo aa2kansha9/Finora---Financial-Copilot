@@ -5,36 +5,43 @@ const C = { darkGreen: "#0A3323", moss: "#839958", beige: "#F7F4D5", rosy: "#D39
 
 export default function ContactPage() {
   const navigate = useNavigate();
-  const [form, setForm]       = useState({ name: "", email: "", message: "" });
-  const [status, setStatus]   = useState("idle");
-  const [errMsg, setErrMsg]    = useState("");
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState("idle");
+  const [errMsg, setErrMsg] = useState("");
   const [backHovered, setBackHovered] = useState(false);
-  const [btnHovered, setBtnHovered]   = useState(false);
+  const [btnHovered, setBtnHovered] = useState(false);
 
-  const handleSubmit = async e => {
-  e.preventDefault();
-  setStatus("sending");
-  
-  try {
-    const res = await fetch(`${process.env.REACT_APP_API_URL}/contact`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-    
-    const data = await res.json();
-    
-    if (!res.ok) throw new Error(data.message || "Failed");
-    
-    setStatus("success");
-    setForm({ name: "", email: "", message: "" });
+  // FIXED: Make sure handleChange is properly defined
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  // FIXED: Updated handleSubmit with correct API path
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus("sending");
     setErrMsg("");
-  } catch (err) {
-    console.error("Error:", err);
-    setErrMsg(err.message);
-    setStatus("error");
-  }
-};
+    
+    try {
+      const res = await fetch("https://finance-backend-ycl6.onrender.com/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      
+      const data = await res.json();
+      
+      if (!res.ok) throw new Error(data.message || "Failed");
+      
+      setStatus("success");
+      setForm({ name: "", email: "", message: "" });
+    } catch (err) {
+      console.error("Contact error:", err);
+      setErrMsg(err.message);
+      setStatus("error");
+    }
+  };
+
   return (
     <div style={s.page}>
       <button
@@ -66,8 +73,6 @@ export default function ContactPage() {
                 onChange={handleChange}
                 placeholder="Your name"
                 required
-                onFocus={e => Object.assign(e.target.style, s.inputFocus)}
-                onBlur={e => Object.assign(e.target.style, { borderColor: `${C.moss}33`, boxShadow: "none" })}
               />
             </div>
             <div style={s.field}>
@@ -80,8 +85,6 @@ export default function ContactPage() {
                 onChange={handleChange}
                 placeholder="your@email.com"
                 required
-                onFocus={e => Object.assign(e.target.style, s.inputFocus)}
-                onBlur={e => Object.assign(e.target.style, { borderColor: `${C.moss}33`, boxShadow: "none" })}
               />
             </div>
           </div>
@@ -96,13 +99,11 @@ export default function ContactPage() {
               placeholder="Write your message here..."
               required
               rows={6}
-              onFocus={e => Object.assign(e.target.style, s.inputFocus)}
-              onBlur={e => Object.assign(e.target.style, { borderColor: `${C.moss}33`, boxShadow: "none" })}
             />
           </div>
 
           {status === "success" && (
-            <p style={s.successMsg}>Message sent. Thank you for reaching out.</p>
+            <p style={s.successMsg}>Message sent. Thank you for reaching out!</p>
           )}
           {status === "error" && (
             <p style={s.errorMsg}>{errMsg || "Something went wrong. Please try again."}</p>
@@ -137,7 +138,8 @@ const s = {
   },
   backBtn: {
     position: "fixed",
-    top: "1.1rem", left: "1.25rem",
+    top: "1.1rem",
+    left: "1.25rem",
     zIndex: 10,
     background: "transparent",
     border: `1px solid ${C.moss}44`,
@@ -178,7 +180,8 @@ const s = {
     letterSpacing: "-0.5px",
   },
   bar: {
-    width: "40px", height: "3px",
+    width: "40px",
+    height: "3px",
     background: C.moss,
     borderRadius: "999px",
     marginBottom: "1.5rem",
