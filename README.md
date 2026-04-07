@@ -2,6 +2,8 @@
 
 **Finora** is a smart, intuitive personal finance assistant designed to help individuals take control of their financial lives. Unlike generic budgeting apps or overly complex accounting tools, Finora focuses on answering one simple but powerful question: *“Can I afford this?”* — while giving users complete visibility into their income, expenses, savings, and overall financial health.
 
+Live Link of the project deployed on render: https://finance-frontend-00ni.onrender.com
+
 ---
 
 ## 🚨 Problem Statement
