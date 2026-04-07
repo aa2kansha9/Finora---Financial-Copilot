@@ -5,18 +5,12 @@ const C = { darkGreen: "#0A3323", moss: "#839958", beige: "#F7F4D5", rosy: "#D39
 
 export default function ContactPage() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
   const [status, setStatus] = useState("idle");
   const [errMsg, setErrMsg] = useState("");
-  const [backHovered, setBackHovered] = useState(false);
-  const [btnHovered, setBtnHovered] = useState(false);
 
-  // FIXED: Make sure handleChange is properly defined
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  // FIXED: Updated handleSubmit with correct API path
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("sending");
@@ -26,7 +20,7 @@ export default function ContactPage() {
       const res = await fetch("https://finance-backend-ycl6.onrender.com/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ name, email, message }),
       });
       
       const data = await res.json();
@@ -34,7 +28,9 @@ export default function ContactPage() {
       if (!res.ok) throw new Error(data.message || "Failed");
       
       setStatus("success");
-      setForm({ name: "", email: "", message: "" });
+      setName("");
+      setEmail("");
+      setMessage("");
     } catch (err) {
       console.error("Contact error:", err);
       setErrMsg(err.message);
@@ -45,9 +41,7 @@ export default function ContactPage() {
   return (
     <div style={s.page}>
       <button
-        style={{ ...s.backBtn, ...(backHovered ? s.backBtnHover : {}) }}
-        onMouseEnter={() => setBackHovered(true)}
-        onMouseLeave={() => setBackHovered(false)}
+        style={s.backBtn}
         onClick={() => navigate("/dashboard")}
       >
         ← Back
@@ -61,16 +55,15 @@ export default function ContactPage() {
           Have a question, a suggestion, or found something broken? Send a message and it will land directly in the inbox.
         </p>
 
-        <form style={s.form} onSubmit={handleSubmit} noValidate>
+        <form style={s.form} onSubmit={handleSubmit}>
           <div style={s.row}>
             <div style={s.field}>
               <label style={s.label}>Name</label>
               <input
                 style={s.input}
                 type="text"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 placeholder="Your name"
                 required
               />
@@ -80,9 +73,8 @@ export default function ContactPage() {
               <input
                 style={s.input}
                 type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
                 required
               />
@@ -93,9 +85,8 @@ export default function ContactPage() {
             <label style={s.label}>Message</label>
             <textarea
               style={s.textarea}
-              name="message"
-              value={form.message}
-              onChange={handleChange}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
               placeholder="Write your message here..."
               required
               rows={6}
@@ -103,7 +94,7 @@ export default function ContactPage() {
           </div>
 
           {status === "success" && (
-            <p style={s.successMsg}>Message sent. Thank you for reaching out!</p>
+            <p style={s.successMsg}>Message sent! I'll get back to you soon.</p>
           )}
           {status === "error" && (
             <p style={s.errorMsg}>{errMsg || "Something went wrong. Please try again."}</p>
@@ -112,9 +103,7 @@ export default function ContactPage() {
           <button
             type="submit"
             disabled={status === "sending"}
-            style={{ ...s.submitBtn, ...(btnHovered ? s.submitBtnHover : {}), ...(status === "sending" ? s.submitBtnDisabled : {}) }}
-            onMouseEnter={() => setBtnHovered(true)}
-            onMouseLeave={() => setBtnHovered(false)}
+            style={s.submitBtn}
           >
             {status === "sending" ? "Sending..." : "Send Message"}
           </button>
@@ -150,12 +139,6 @@ const s = {
     fontSize: "0.82rem",
     fontFamily: "inherit",
     fontWeight: "600",
-    transition: "color 0.18s ease, border-color 0.18s ease, background 0.18s ease",
-  },
-  backBtnHover: {
-    color: C.beige,
-    borderColor: `${C.moss}99`,
-    background: `${C.moss}18`,
   },
   wrap: {
     width: "100%",
@@ -226,7 +209,6 @@ const s = {
     fontSize: "0.9rem",
     fontFamily: "inherit",
     outline: "none",
-    transition: "border-color 0.18s ease, box-shadow 0.18s ease",
   },
   textarea: {
     padding: "0.75rem 1rem",
@@ -238,12 +220,7 @@ const s = {
     fontFamily: "inherit",
     outline: "none",
     resize: "vertical",
-    transition: "border-color 0.18s ease, box-shadow 0.18s ease",
     minHeight: "140px",
-  },
-  inputFocus: {
-    borderColor: `${C.moss}99`,
-    boxShadow: `0 0 0 3px ${C.moss}22`,
   },
   submitBtn: {
     alignSelf: "flex-start",
@@ -256,18 +233,6 @@ const s = {
     fontSize: "0.9rem",
     fontWeight: "800",
     fontFamily: "inherit",
-    letterSpacing: "0.3px",
-    transition: "transform 0.18s ease-in-out, box-shadow 0.18s ease-in-out",
-    boxShadow: `0 4px 20px ${C.moss}44`,
-  },
-  submitBtnHover: {
-    transform: "scale(1.03)",
-    boxShadow: `0 0 28px ${C.moss}88, 0 6px 24px ${C.moss}44`,
-  },
-  submitBtnDisabled: {
-    opacity: 0.6,
-    cursor: "not-allowed",
-    transform: "none",
   },
   successMsg: {
     margin: 0,
