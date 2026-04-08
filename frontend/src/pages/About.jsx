@@ -130,18 +130,31 @@ export default function AboutPage() {
             You start with financial data. Income, expenses, savings, and debt.
             Everything builds on this.
           </p>
-
-          <p style={s.text}>
-            Financial health shows where you stand. The affordability checker tells you if a decision is safe.
+          <p style={s.text}> 
+            <b>Financial Health:</b> Get a clear, brutally honest snapshot of where you stand financially, breaking down your income, expenses, savings, and risk so you know exactly what’s working and what’s not.
+          </p>
+           <p style={s.text}> 
+            <b>AI Insights:</b> Turn your raw financial data into sharp, actionable insights that highlight mistakes, uncover opportunities, and tell you what to do next instead of leaving you guessing.
+          </p>
+           <p style={s.text}> 
+            <b>Portfolio:</b> Plan and visualize your investments with structured allocation strategies designed to balance growth, risk, and long-term wealth building.
+          </p>
+           <p style={s.text}> 
+            <b>Goals:</b> Set financial targets that actually mean something, track your progress in real time, and understand whether you’re on track or falling behind.
+          </p>
+           <p style={s.text}> 
+            <b>What If Simulator:</b> Test real-life financial decisions before making them, so you can see the impact of your choices on savings, stability, and future growth.
+          </p>
+           <p style={s.text}> 
+            <b>Affordability Checker:</b> Instantly know whether you can afford something without sabotaging your financial stability or dipping into unsafe territory.
+          </p>
+           <p style={s.text}> 
+            <b>History:</b> Track every financial move you’ve made, analyze patterns over time, and use your past behavior to make smarter future decisions.
           </p>
 
-          <p style={s.text}>
-            The what if simulator lets you test decisions. Portfolio helps you plan allocation and long-term investing.
-          </p>
 
-          <p style={s.text}>
-            AI insights convert raw numbers into conclusions you can actually use.
-          </p>
+
+
         </section>
 
         {/* DIFFERENTIATOR */}
