@@ -289,12 +289,12 @@ export default function FinanceEntry() {
       </div>
 
       {/* Page header */}
-      <div style={s.pageHeader}>
+      <div style={s.pageHeader} className="fe-pageheader">
         <div>
           <h1 style={s.pageTitle}>My Financial Data</h1>
           <p style={s.pageSub}>Manage income, expenses, debts and investments. Health score updates automatically.</p>
         </div>
-        <div style={s.pills}>
+        <div style={s.pills} className="fe-pills">
           {TABS.map(t => (
             <div key={t} style={s.pill}>
               <span>{TAB_META[t].icon}</span>
@@ -308,7 +308,7 @@ export default function FinanceEntry() {
       </div>
 
       {/* Content */}
-      <div style={s.content}>
+      <div style={s.content} className="fe-content">
 
         {/* Tabs */}
         <div style={s.tabBar}>
@@ -364,7 +364,7 @@ export default function FinanceEntry() {
         </div>
 
         {/* Two-column */}
-        <div style={s.twoCol}>
+        <div style={s.twoCol} className="fe-twocol">
 
           {/* Form */}
           <div style={s.formCard}>

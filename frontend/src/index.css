@@ -9,21 +9,62 @@ body {
   font-size: 16px;
 }
 
-/* Responsive sidebar collapse */
+/* ─── GLOBAL ──────────────────────────────────────────────────────────────── */
+html, body { overflow-x: hidden; }
+
+/* ─── FINANCIAL HEALTH grids ─────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .fh-topgrid     { grid-template-columns: 1fr !important; }
+  .fh-summarygrid { grid-template-columns: repeat(2, 1fr) !important; }
+  .fh-metricsgrid { grid-template-columns: repeat(3, 1fr) !important; }
+  .fh-bottomgrid  { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 600px) {
+  .fh-metricsgrid { grid-template-columns: repeat(2, 1fr) !important; }
+  .fh-root        { padding: 1.25rem !important; }
+}
+@media (max-width: 420px) {
+  .fh-summarygrid { grid-template-columns: 1fr !important; }
+  .fh-metricsgrid { grid-template-columns: 1fr !important; }
+}
+
+/* ─── FINANCE ENTRY ──────────────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .fe-twocol     { grid-template-columns: 1fr !important; }
+  .fe-pageheader { flex-direction: column !important; align-items: flex-start !important; }
+  .fe-pills      { flex-wrap: wrap !important; }
+}
+@media (max-width: 600px) {
+  .fe-content    { padding: 1rem 1rem 2rem !important; }
+  .fe-pageheader { padding: 1.25rem 1rem 1rem !important; }
+}
+
+/* ─── PERSONALITY PAGE ───────────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .personality-card              { flex-direction: column !important; }
+  .personality-image-placeholder { width: 100% !important; min-height: 200px !important; border-radius: 20px !important; }
+  .personality-name              { font-size: 1.4rem !important; }
+  .personality-wrap              { max-width: 100% !important; }
+}
+
+/* ─── CONTACT PAGE ───────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .contact-row  { flex-direction: column !important; }
+  .contact-wrap { padding: 4rem 1.25rem 3rem !important; }
+}
+
+/* ─── HOME / HEALTH PAGE ─────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .home-content { padding: 1.25rem 1rem 2rem !important; }
+}
+
+/* ─── SIDEBAR ────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .sidebar { display: none; }
+  .sidebar      { display: none; }
   .main-content { margin-left: 0 !important; }
-  .metrics-grid { grid-template-columns: repeat(2, 1fr) !important; }
-  .metrics-row-5 { grid-template-columns: repeat(2, 1fr) !important; }
-  .chart-row { flex-direction: column !important; }
-  .form-row { flex-direction: column !important; }
 }
 
-@media (max-width: 480px) {
-  .metrics-grid { grid-template-columns: 1fr !important; }
-  .metrics-row-5 { grid-template-columns: 1fr !important; }
-}
-
+/* ─── KEYFRAMES ──────────────────────────────────────────────────────────── */
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
@@ -54,10 +95,10 @@ body {
 }
 
 @keyframes float {
-  0%        { transform: translateY(0px); }
-  30%       { transform: translateY(-10px); }
-  60%       { transform: translateY(-16px); }
-  100%      { transform: translateY(0px); }
+  0%   { transform: translateY(0px); }
+  30%  { transform: translateY(-10px); }
+  60%  { transform: translateY(-16px); }
+  100% { transform: translateY(0px); }
 }
 
 @keyframes ballPulse {

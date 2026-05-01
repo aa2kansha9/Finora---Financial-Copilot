@@ -144,7 +144,7 @@ export default function FinancialHealth({ data, onRefresh }) {
         )}
       </div>
 
-      <div style={s.topGrid}>
+      <div style={s.topGrid} className="fh-topgrid">
         <HoverCard style={s.scoreCard}>
           <p style={s.scoreLbl}>Overall Score</p>
           <div style={s.scoreRow}>
@@ -164,7 +164,7 @@ export default function FinancialHealth({ data, onRefresh }) {
           )}
         </HoverCard>
 
-        <div style={s.summaryGrid}>
+        <div style={s.summaryGrid} className="fh-summarygrid">
           {[
             { label: "Monthly Income",   value: `₹${Number(monthlyIncome).toLocaleString()}`,   color: C.good },
             { label: "Monthly Expenses", value: `₹${Number(monthlyExpenses).toLocaleString()}`, color: C.rosy },
@@ -182,7 +182,7 @@ export default function FinancialHealth({ data, onRefresh }) {
         </div>
       </div>
 
-      <div style={s.metricsGrid}>
+      <div style={s.metricsGrid} className="fh-metricsgrid">
         {metrics.map(mc => {
           const color = metricColor(mc.good, mc.warn);
           return (
@@ -196,7 +196,7 @@ export default function FinancialHealth({ data, onRefresh }) {
         })}
       </div>
 
-      <div style={s.bottomGrid}>
+      <div style={s.bottomGrid} className="fh-bottomgrid">
         <HoverCard style={s.chartCard}>
           <p style={s.sectionTitle}>Metrics at a Glance</p>
           <Bar data={chartData} options={{

@@ -74,8 +74,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Content */}
-      <div style={s.content}>
+      <div style={s.content} className="home-content">
         {renderContent()}
       </div>
     </div>

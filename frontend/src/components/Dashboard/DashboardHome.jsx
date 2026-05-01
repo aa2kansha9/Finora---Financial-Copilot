@@ -25,16 +25,17 @@ const FEATURES = [
 
 // Perfect 360° circle — evenly spaced, 12 o'clock start
 const RADIUS = 185;
-function getCirclePositions(count) {
+function getCirclePositions(count, radius = RADIUS) {
   return Array.from({ length: count }, (_, i) => {
     const angle = (2 * Math.PI * i) / count - Math.PI / 2;
     return {
-      x: Math.cos(angle) * RADIUS,
-      y: Math.sin(angle) * RADIUS * 0.92,
+      x: Math.cos(angle) * radius,
+      y: Math.sin(angle) * radius * 0.92,
     };
   });
 }
-const POSITIONS = getCirclePositions(FEATURES.length);
+const POSITIONS    = getCirclePositions(FEATURES.length, 185);
+const POSITIONS_SM = getCirclePositions(FEATURES.length, 130);
 
 // ── Wealth graph (no score badge)
 function WealthGraph() {
@@ -229,11 +230,15 @@ export default function DashboardHome() {
   const { user, logout } = useAuth();
   const navigate         = useNavigate();
 
-  // open: cards are mounted and animating out
-  // closing: cards are animating back in before unmount
-  const [open, setOpen]       = useState(false);
+  const [open, setOpen]       = useState(() => localStorage.getItem("exploreOpen") === "true");
   const [closing, setClosing] = useState(false);
   const [glowing, setGlowing] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const setOpenPersist = (val) => {
+    localStorage.setItem("exploreOpen", val);
+    setOpen(val);
+  };
 
   useEffect(() => {
     if (document.getElementById("dh-kf")) return;
@@ -257,6 +262,20 @@ export default function DashboardHome() {
       @keyframes dhOverlay   { from{opacity:0} to{opacity:1} }
       @keyframes kypShimmer  { 0%{background-position:-200% center} 100%{background-position:200% center} }
       @keyframes kypPulse    { 0%,100%{box-shadow:0 0 8px 2px #83995866,0 2px 16px #83995833} 50%{box-shadow:0 0 18px 6px #839958aa,0 4px 28px #83995855} }
+      @keyframes mobileMenuIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:none} }
+      @media (max-width: 768px) {
+        .dh-nav-desktop { display: none !important; }
+        .dh-nav-mobile  { display: flex !important; }
+        .dh-body        { flex-direction: column !important; }
+        .dh-left        { width: 100% !important; border-right: none !important; border-bottom: 1px solid #83995822 !important; padding: 1.5rem 1rem !important; }
+        .dh-right       { width: 100% !important; min-height: 260px !important; }
+        .dh-stage       { width: 360px !important; height: 360px !important; }
+        .dh-headline    { font-size: 1.2rem !important; }
+      }
+      @media (max-width: 480px) {
+        .dh-stage       { width: 300px !important; height: 300px !important; }
+        .dh-topbar      { padding: 0 1rem !important; }
+      }
     `;
     document.head.appendChild(st);
   }, []);
@@ -264,52 +283,83 @@ export default function DashboardHome() {
   const handleToggle = () => {
     if (open && !closing) {
       setClosing(true);
-      setTimeout(() => { setOpen(false); setClosing(false); }, 680);
+      setTimeout(() => { setOpenPersist(false); setClosing(false); }, 680);
     } else if (!open) {
-      setOpen(true);
+      setOpenPersist(true);
     }
   };
 
   const handleNavigate = (feature, idx) => {
     setGlowing(idx);
-    setTimeout(() => { setGlowing(null); setOpen(false); setClosing(false); navigate(feature.path); }, 420);
+    setTimeout(() => { setGlowing(null); navigate(feature.path); }, 420);
   };
 
   return (
     <div style={s.root}>
 
       {/* Top bar */}
-      <div style={s.topBar}>
+      <div style={s.topBar} className="dh-topbar">
         <div style={s.topLogo}>
           <div style={s.topMark}>F</div>
           <span style={s.topName}>Finora</span>
         </div>
-        <div style={s.topRight}>
+
+        {/* Desktop nav */}
+        <div style={s.topRight} className="dh-nav-desktop">
           <PersonalityNavBtn onClick={() => navigate("/dashboard/personality")} />
           <button style={s.navBtn} onClick={() => navigate("/dashboard/about")}>About</button>
           <button style={s.navBtn} onClick={() => navigate("/dashboard/help")}>Help</button>
+          <button style={s.navBtn} onClick={() => navigate("/dashboard/contact")}>Contact</button>
           <button style={s.logoutBtn} onClick={() => { logout(); navigate("/login"); }}>Sign out</button>
+        </div>
+
+        {/* Mobile hamburger */}
+        <div style={{ display: "none", alignItems: "center", gap: "0.75rem" }} className="dh-nav-mobile">
+          <button style={s.logoutBtn} onClick={() => { logout(); navigate("/login"); }}>Sign out</button>
+          <button
+            onClick={() => setMenuOpen(m => !m)}
+            style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.4)", color: "#fff", borderRadius: "8px", padding: "0.35rem 0.7rem", cursor: "pointer", fontSize: "1rem", fontFamily: "inherit" }}
+          >
+            {menuOpen ? "✕" : "☰"}
+          </button>
         </div>
       </div>
 
+      {/* Mobile dropdown menu */}
+      {menuOpen && (
+        <div style={s.mobileMenu}>
+          {[
+            { label: "Know Your Personality", path: "/dashboard/personality" },
+            { label: "About",   path: "/dashboard/about" },
+            { label: "Help",    path: "/dashboard/help" },
+            { label: "Contact", path: "/dashboard/contact" },
+          ].map(item => (
+            <button key={item.path} style={s.mobileMenuItem}
+              onClick={() => { setMenuOpen(false); navigate(item.path); }}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Body */}
-      <div style={s.body}>
+      <div style={s.body} className="dh-body">
 
         {/* LEFT — radial menu */}
-        <div style={s.leftPanel}>
+        <div style={s.leftPanel} className="dh-left">
           <div style={s.leftContent}>
-            <h1 style={s.headline}>Your money,<br />fully in focus.</h1>
+            <h1 style={s.headline} className="dh-headline">Your money,<br />fully in focus.</h1>
             <p style={s.subline}>Tap Explore to navigate your financial universe.</p>
 
-            {/* Fixed-size stage so cards always have a known center */}
-            <div style={s.stage}>
+            <div style={s.stage} className="dh-stage">
               {open && <div style={s.backdrop} onClick={handleToggle} />}
 
               {open && FEATURES.map((f, i) => (
                 <FeatureCard
                   key={f.path}
                   feature={f}
-                  pos={POSITIONS[i]}
+                  pos={window.innerWidth <= 480 ? POSITIONS_SM[i] : POSITIONS[i]}
                   idx={i}
                   glowing={glowing}
                   closing={closing}
@@ -323,7 +373,7 @@ export default function DashboardHome() {
         </div>
 
         {/* RIGHT — wealth graph */}
-        <div style={s.rightPanel}>
+        <div style={s.rightPanel} className="dh-right">
           <WealthGraph />
         </div>
 
@@ -343,8 +393,8 @@ const g = {
 
 // ── Main styles
 const s = {
-  root:       { width: "100vw", height: "100vh", display: "flex", flexDirection: "column", background: C.darkGreen, fontFamily: "'Inter','Poppins',-apple-system,sans-serif", overflow: "hidden" },
-  topBar:     { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 2rem", height: "56px", flexShrink: 0, borderBottom: `1px solid ${C.moss}22`, zIndex: 50 },
+  root:       { width: "100vw", minHeight: "100vh", display: "flex", flexDirection: "column", background: C.darkGreen, fontFamily: "'Inter','Poppins',-apple-system,sans-serif", overflowX: "hidden" },
+  topBar:     { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 2rem", height: "56px", flexShrink: 0, borderBottom: `1px solid ${C.moss}22`, zIndex: 50, position: "relative" },
   topLogo:    { display: "flex", alignItems: "center", gap: "0.6rem" },
   topMark:    { width: "28px", height: "28px", borderRadius: "7px", background: C.moss, color: C.darkGreen, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "800", fontSize: "0.95rem" },
   topName:    { fontSize: "1.05rem", fontWeight: "700", color: C.beige, letterSpacing: "-0.3px" },
@@ -353,6 +403,8 @@ const s = {
   logoutBtn:  { padding: "0.35rem 0.9rem", background: `${C.rosy}33`, border: `1px solid ${C.rosy}55`, color: C.rosy, borderRadius: "8px", cursor: "pointer", fontSize: "0.82rem", fontWeight: "600", fontFamily: "inherit", transition: "background 0.2s" },
   navBtn:     { padding: "0.35rem 0.9rem", background: "transparent", border: "1px solid rgba(255,255,255,0.5)", color: "rgba(255,255,255,0.85)", borderRadius: "8px", cursor: "pointer", fontSize: "0.82rem", fontWeight: "600", fontFamily: "inherit", transition: "color 0.18s ease, border-color 0.18s ease, background 0.18s ease" },
   body:       { display: "flex", flex: 1, overflow: "visible", minHeight: 0 },
+  mobileMenu: { position: "absolute", top: "56px", right: "1rem", background: "#0d2e1a", border: `1px solid ${C.moss}33`, borderRadius: "12px", padding: "0.5rem", zIndex: 100, display: "flex", flexDirection: "column", gap: "0.25rem", minWidth: "200px", animation: "mobileMenuIn 0.2s ease-out", boxShadow: "0 8px 32px rgba(0,0,0,0.4)" },
+  mobileMenuItem: { background: "transparent", border: "none", color: `${C.beige}cc`, padding: "0.65rem 1rem", borderRadius: "8px", cursor: "pointer", fontSize: "0.88rem", fontWeight: "600", fontFamily: "inherit", textAlign: "left", transition: "background 0.15s ease" },
 
   leftPanel:  { width: "42%", display: "flex", alignItems: "center", justifyContent: "center", borderRight: `1px solid ${C.moss}18`, position: "relative", overflow: "visible", padding: "0.5rem" },
   leftContent:{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.4rem", overflow: "visible" },
